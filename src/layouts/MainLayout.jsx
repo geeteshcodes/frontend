@@ -201,11 +201,12 @@ const MainLayout = () => {
                       />
                     </div>
                     <div className="text-left">
-                    <div>
-                      <p className="text-sm font-bold text-slate-900 leading-tight">
-                        {user?.user_metadata?.full_name || "Guest Traveler"}
-                      </p>
-                      <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Signed in</p>
+                      <div>
+                        <p className="text-sm font-bold text-slate-900 leading-tight">
+                          {user?.user_metadata?.full_name || "Guest Traveler"}
+                        </p>
+                        <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Signed in</p>
+                      </div>
                     </div>
                   </button>
 
