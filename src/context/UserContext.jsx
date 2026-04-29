@@ -73,8 +73,8 @@ export const UserProvider = ({ children }) => {
   const loginWithGoogle = async () => {
     // Determine the redirect URL (Local vs Production)
     const redirectUrl = window.location.origin.includes('localhost') 
-      ? window.location.origin 
-      : 'https://www.thetravstory.com';
+      ? `${window.location.origin}/chat` 
+      : 'https://www.thetravstory.com/chat';
 
     const { error } = await supabase.auth.signInWithOAuth({
       provider: "google",
