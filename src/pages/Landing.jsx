@@ -345,11 +345,9 @@ const Landing = () => {
     mouseY.set(clientY - top);
   }
 
-  // If already logged in, redirect to app automatically
+  // Stay on landing page even if logged in, unless explicit action is taken
   useEffect(() => {
-    if (user && !loading) {
-      navigate("/chat");
-    }
+    // We no longer auto-redirect to /chat here so that the Landing page acts as the true home page.
   }, [user, loading, navigate]);
 
   const handleGoToAuth = async () => {

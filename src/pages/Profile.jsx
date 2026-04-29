@@ -1,16 +1,29 @@
 import React, { useState, useEffect } from 'react';
-import { motion } from "framer-motion";
-import { Plane, Bookmark, Award, Globe, Pen, Camera, Globe2, MapPin, Calendar, ClipboardList, Plus, Heart, Settings, ShieldCheck, ChevronRight, BookOpen, Sun, Utensils, Compass, Send } from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
+import { Plane, Bookmark, Award, Globe, Pen, Camera, Globe2, MapPin, Calendar, ClipboardList, Plus, Heart, Settings, ShieldCheck, ChevronRight, BookOpen, Sun, Utensils, Compass, Send, X } from "lucide-react";
 import { useUser } from "../context/UserContext";
 import SEO from "../components/common/SEO";
 import Planner from './Planner';
 
-const ProfileDashboard = ({ user }) => {
+const ProfileDashboard = ({ user, updateAvatar }) => {
   const [activeNav, setActiveNav] = useState('Profile');
   const [activeTab, setActiveTab] = useState('Overview');
 
   const navItems = ['Chat', 'Planner', 'Bookings', 'Explore', 'Profile'];
   const profileTabs = ['Overview', 'My Trips', 'Memories', 'Settings'];
+
+  // Avatar Selection State
+  const [isAvatarModalOpen, setIsAvatarModalOpen] = useState(false);
+  const PRESET_AVATARS = [
+    "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?q=80&w=300&auto=format&fit=crop",
+    "https://images.unsplash.com/photo-1580489944761-15a19d654956?q=80&w=300&auto=format&fit=crop",
+    "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?q=80&w=300&auto=format&fit=crop",
+    "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=300&auto=format&fit=crop",
+    "https://images.unsplash.com/photo-1544005313-94ddf0286df2?q=80&w=300&auto=format&fit=crop",
+    "https://images.unsplash.com/photo-1527980965255-d3b416303d12?q=80&w=300&auto=format&fit=crop",
+    "https://images.unsplash.com/photo-1633332755192-727a05c4013d?q=80&w=300&auto=format&fit=crop",
+    "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?q=80&w=300&auto=format&fit=crop"
+  ];
 
   // Bucket list state for interactivity
   const [bucketList, setBucketList] = useState(user.bucketList);
@@ -48,7 +61,11 @@ const ProfileDashboard = ({ user }) => {
 
   // Handlers for dynamic actions
   const handleEditProfile = () => alert("Edit Profile Clicked");
-  const handleUpdateAvatar = () => alert("Update Avatar Clicked");
+  const handleUpdateAvatar = () => setIsAvatarModalOpen(true);
+  const handleSelectAvatar = (url) => {
+    if(updateAvatar) updateAvatar(url);
+    setIsAvatarModalOpen(false);
+  };
   const handlePrivacySettings = () => alert("Privacy & Security Clicked");
   const handleLike = (title) => alert(`Liked ${title}!`);
 
@@ -1131,18 +1148,63 @@ const ProfileDashboard = ({ user }) => {
           </div>
         </div>
       </main>
+
+      {/* Avatar Selection Modal */}
+      <AnimatePresence>
+        {isAvatarModalOpen && (
+          <motion.div 
+            className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/40 backdrop-blur-sm"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+          >
+            <motion.div 
+              className="bg-white rounded-3xl p-6 w-full max-w-lg shadow-2xl relative"
+              initial={{ scale: 0.95, y: 20 }}
+              animate={{ scale: 1, y: 0 }}
+              exit={{ scale: 0.95, y: 20 }}
+            >
+              <button 
+                onClick={() => setIsAvatarModalOpen(false)}
+                className="absolute top-4 right-4 p-2 text-slate-400 hover:text-slate-600 hover:bg-slate-100 rounded-full transition-colors"
+              >
+                <X size={20} />
+              </button>
+              
+              <h2 className="text-xl font-bold text-slate-900 mb-6 flex items-center gap-2">
+                <Camera className="text-sky-600" /> Choose Your Avatar
+              </h2>
+              
+              <div className="grid grid-cols-4 gap-4">
+                {PRESET_AVATARS.map((url, idx) => (
+                  <button 
+                    key={idx}
+                    onClick={() => handleSelectAvatar(url)}
+                    className={`aspect-square rounded-2xl overflow-hidden border-4 transition-all hover:scale-105 active:scale-95 ${user.avatarImage === url ? 'border-sky-500 shadow-md' : 'border-transparent hover:border-sky-200'}`}
+                  >
+                    <img src={url} alt={`Avatar ${idx + 1}`} className="w-full h-full object-cover" />
+                  </button>
+                ))}
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 };
 
 const ProfileWrapper = () => {
-  const { user } = useUser();
-  const mockUser = {
-    navName: user?.user_metadata?.full_name || "Guest Explorer",
-    navAvatar: "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?q=80&w=100&auto=format&fit=crop",
+  const { user, profile, updateAvatar } = useUser();
+  const avatarUrl = profile?.avatar_url || user?.user_metadata?.avatar_url || "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?q=80&w=300&auto=format&fit=crop";
+  const fullName = profile?.full_name || user?.user_metadata?.full_name || "Guest Explorer";
+
+  const dynamicUser = {
+    navName: fullName,
+    navAvatar: avatarUrl,
     coverImage: "https://images.unsplash.com/photo-1503220317375-aaad61436b1b?q=80&w=1200&auto=format&fit=crop",
-    avatarImage: "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?q=80&w=300&auto=format&fit=crop",
-    profileName: user?.user_metadata?.full_name || "Guest Explorer",
+    avatarImage: avatarUrl,
+    profileName: fullName,
     location: "Global Nomad",
     joinedDate: "Joined April 2026",
     email: user?.email || "guest@example.com",
@@ -1178,7 +1240,7 @@ const ProfileWrapper = () => {
     ]
   };
 
-  return <ProfileDashboard user={mockUser} />;
+  return <ProfileDashboard user={dynamicUser} updateAvatar={updateAvatar} />;
 };
 
 export default ProfileWrapper;

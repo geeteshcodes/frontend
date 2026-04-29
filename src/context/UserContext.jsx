@@ -90,6 +90,23 @@ export const UserProvider = ({ children }) => {
     if (error) throw error;
   };
 
+  const updateAvatar = async (newAvatarUrl) => {
+    if (!user) return;
+    try {
+      const { data, error } = await supabase
+        .from("profiles")
+        .update({ avatar_url: newAvatarUrl })
+        .eq("id", user.id)
+        .select()
+        .single();
+      
+      if (error) throw error;
+      setProfile(data);
+    } catch (err) {
+      console.error("Avatar update error:", err);
+    }
+  };
+
   return (
     <UserContext.Provider
       value={{
@@ -100,6 +117,7 @@ export const UserProvider = ({ children }) => {
         loading,
         loginWithGoogle,
         logout,
+        updateAvatar,
         setUser,
         refreshProfile: () => syncProfile(user),
         // Personality tag is now a static default
