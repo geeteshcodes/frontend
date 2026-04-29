@@ -15,6 +15,8 @@ import { ChevronRight, ChevronLeft, ChevronDown, Edit3, Trash2, Star } from "luc
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import CircleLogo from "../pages/CircleLogo.png";
+import plane from "../layouts/plane.png";
+import vcurve from "../layouts/VCurve.png";
 import { useTrip } from "../context/TripContext";
 import { api } from "../services/api";
 import Dropdown from "../components/common/Dropdown";
@@ -872,24 +874,6 @@ export default function Chat() {
                         className="w-full px-5 py-3.5 bg-slate-100/50 border-2 border-transparent focus:border-sky-600 rounded-xl outline-none text-base transition"
                       />
 
-                      <div className="flex flex-wrap gap-2 justify-center">
-                        {[
-                          { label: "Beach 🏖️", val: "Beach" },
-                          { label: "Mountains ⛰️", val: "Mountains" },
-                          { label: "City 🏙️", val: "City" }
-                        ].map((chip) => (
-                          <button
-                            key={chip.val}
-                            onClick={() => {
-                              setOnboardingData({ ...onboardingData, destination: chip.val });
-                              setOnboardingStep(3);
-                            }}
-                            className="px-3 py-1.5 rounded-full bg-slate-50 border border-slate-200 text-xs font-bold text-slate-600 hover:border-sky-300 hover:bg-sky-50 transition"
-                          >
-                            {chip.label}
-                          </button>
-                        ))}
-                      </div>
                       <div className="pt-1">
                         <button
                           onClick={() => setOnboardingStep(3)}
@@ -1084,42 +1068,43 @@ export default function Chat() {
               {/* Header */}
               <div className="px-8 py-6 flex items-center justify-between relative z-30">
                 <div className="flex items-center gap-3">
-                  <div className="h-12 w-12 rounded-full bg-sky-600 text-white flex items-center justify-center">
-                    <img src={CircleLogo} alt="Logo" />
-                  </div>
-                  <div>
-                    {isEditingTitle ? (
-                      <div className="flex items-center gap-2">
-                        <input
-                          autoFocus
-                          value={editingTitle}
-                          onChange={(e) => setEditingTitle(e.target.value)}
-                          onBlur={async () => {
-                            setIsEditingTitle(false);
-                            if (editingTitle && editingTitle !== tripMeta?.title) {
-                              // Add logic to update in trip context if needed, 
-                              // for now we'll just update locally
-                              tripMeta.title = editingTitle;
-                            }
-                          }}
-                          className="bg-slate-50 border-b-2 border-sky-600 outline-none font-semibold px-1"
+                  <div 
+                    onClick={() => navigate('/')}
+                    className="flex flex-col leading-none cursor-pointer group"
+                  >
+                    {/* THE */}
+                    <span className="text-[10px] font-bold text-slate-400 tracking-[0.3em] mb-[-2px] ml-0.5 transition-colors group-hover:text-sky-600">
+                      THE
+                    </span>
+
+                    {/* MAIN BRAND: TRAV STORY */}
+                    <div className="flex items-center">
+                      <span className="text-xl sm:text-2xl font-black tracking-tighter text-sky-600">
+                        TRA
+                      </span>
+
+                      {/* CONSTRUCTED V (LEFT CURVE + PLANE RIGHT) */}
+                      <div className="relative flex items-center justify-center w-8 sm:w-10 h-6 sm:h-8 -mx-2 sm:-mx-3 translate-y-0.5 group-hover:scale-105 transition-transform duration-300">
+                        {/* LEFT CURVE (VCurve.png) - MATCHING SKY BLUE */}
+                        <img
+                          src={vcurve}
+                          alt="V-left"
+                          className="absolute inset-0 w-full h-full object-contain -translate-x-1"
+                        />
+                        {/* PLANE (RIGHT CURVE) (plane.png) */}
+                        <img
+                          src={plane}
+                          alt="V-right"
+                          className="absolute inset-0 w-full h-full object-contain translate-x-1.5 scale-110"
                         />
                       </div>
-                    ) : (
-                      <div className="flex items-center gap-2 group">
-                        <div className="font-semibold cursor-pointer hover:text-sky-600" onClick={() => {
-                          setEditingTitle(tripMeta?.title || "My Trip");
-                          setIsEditingTitle(true);
-                        }}>
-                          {"The Travstory"}
-                        </div>
-                        <Edit3 size={12} className="text-slate-300 opacity-0 group-hover:opacity-100 transition" />
-                      </div>
-                    )}
-                    <div className="text-[12px] text-slate-500 font-semibold">
-                      Knows vibes, not visas
+
+                      <span className="text-xl sm:text-2xl font-black tracking-tighter text-slate-900 ml-0">
+                        AI
+                      </span>
                     </div>
                   </div>
+
                 </div>
 
                 <div className="flex items-center gap-2">

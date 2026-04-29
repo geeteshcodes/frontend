@@ -34,7 +34,7 @@ const MainLayout = () => {
         <div className="w-full px-8 py-3 flex items-center">
 
           {/* LEFT — BRAND */}
-          <NavLink to="/" className="flex items-center shrink-0 cursor-pointer group mr-auto lg:mr-0">
+          <a href="/" className="flex items-center shrink-0 cursor-pointer group mr-auto lg:mr-0">
             <div className="flex flex-col leading-none">
               {/* THE */}
               <span className="text-[10px] font-bold text-slate-400 tracking-[0.3em] mb-[-2px] ml-0.5 transition-colors group-hover:text-sky-600">
@@ -68,7 +68,7 @@ const MainLayout = () => {
                 </span>
               </div>
             </div>
-          </NavLink>
+          </a>
 
           {/* CENTER — NAVIGATION (Desktop) */}
           <nav className="hidden lg:flex flex-1 justify-center">
